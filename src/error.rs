@@ -12,3 +12,14 @@ impl From<io::Error> for BenvError {
     }
 }
 
+// impl error::Error for BenvError {
+//     fn description(&self) -> &str {
+//         match *self {
+//         }
+//     }
+
+//     fn cause(&self) -> Option<&error::Error> {
+//         match *self {
+//         }
+//     }
+// }
