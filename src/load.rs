@@ -33,6 +33,8 @@ fn parse(data: String) -> Result<Env> {
 
 fn split(data: &str) -> Result<(String, String)> {
    let vals: Vec<&str> = data.split("=").collect();
+   if vals.len() != 2 { return Err(BenvError::SplitError("More than two elements on split")) }
+
    Ok((vals[0].to_string(), vals[1].to_string()))
 }
 
@@ -69,6 +71,13 @@ mod test {
        ];
 
        assert_eq!(result.unwrap(), expected);
+    }
+
+    #[test]
+    fn test_gibberish() {
+        let path = Path::new("fixtures/gibberish");
+        let result = load_file(&path);
+        assert!(result.is_err());
     }
 
     // Test failed parse

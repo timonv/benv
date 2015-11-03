@@ -3,6 +3,7 @@ use std::io;
 #[derive(Debug)]
 pub enum BenvError {
     ParseError,
+    SplitError(&'static str),
     IO(io::Error)
 }
 
