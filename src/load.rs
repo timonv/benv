@@ -91,6 +91,16 @@ mod test {
        assert_eq!(result.unwrap()[0], expected);
     }
 
+    #[test]
+    fn test_uri_with_quotes() {
+       let path = Path::new("fixtures/uri");
+       let result = load_file(&path);
+       let expected = Env {
+          name: "DATABASE".to_string(),
+          value: "\"postgres://my_favourite_database.com/abc\"".to_string()
+       };
+       assert_eq!(result.unwrap()[0], expected);
+    }
     // Test URI
     // Test overwrite on double occurrence
 }
