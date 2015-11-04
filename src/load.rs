@@ -32,7 +32,7 @@ fn parse(data: String) -> Result<Env> {
 }
 
 fn split(data: &str) -> Result<(String, String)> {
-   let vals: Vec<&str> = data.split("=").collect();
+   let vals: Vec<&str> = data.splitn(2,"=").collect();
    if vals.len() != 2 { return Err(BenvError::SplitError("More than two elements on split")) }
 
    Ok((vals[0].to_string(), vals[1].to_string()))
@@ -80,8 +80,17 @@ mod test {
         assert!(result.is_err());
     }
 
-    // Test failed parse
-    // Test fail on multiple "="
-    // Test pass on quoted "="
+    #[test]
+    fn test_multiple_eq() {
+       let path= Path::new("fixtures/multi_eq");
+       let result = load_file(&path);
+       let expected = Env {
+          name: "HELLO".to_string(),
+          value: "wor=ld".to_string()
+       };
+       assert_eq!(result.unwrap()[0], expected);
+    }
+
+    // Test URI
     // Test overwrite on double occurrence
 }
