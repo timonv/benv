@@ -20,7 +20,7 @@ pub fn load_file(path: &Path) -> Result<EnvList> {
    let mut seen: Vec<String> = vec![];
 
    for line in lines.iter() {
-      let parsed = try!(parse(line));
+      let parsed = try!(split(line).and_then(parse));
       if !seen.iter().by_ref().any(|e| e == &parsed.name) {
          seen.push(parsed.name.clone());
          list.push(parsed);
@@ -37,21 +37,27 @@ fn read_lines_reverse(path: &Path) -> Result<Vec<String>> {
    let mut lines = vec![];
    for line in BufReader::new(file).lines() {
       let line = try!(line);
-      lines.insert(0, line);
+      if !is_comment(&line) {
+         lines.insert(0, line);
+      }
    }
+
    Ok(lines)
 }
 
-fn parse(data: &str) -> Result<Env> {
-   let (name,value) = try!(split(data));
+fn parse((name, value): (String, String)) -> Result<Env> {
    Ok(Env { name: name, value: value})
 }
 
 fn split(data: &str) -> Result<(String, String)> {
    let vals: Vec<&str> = data.splitn(2,"=").collect();
-   if vals.len() != 2 { return Err(BenvError::SplitError("More than two elements on split")) }
+   if vals.len() != 2 { return Err(BenvError::SplitError("Not two elements on split")) }
 
    Ok((vals[0].to_string(), vals[1].to_string()))
+}
+
+fn is_comment(line: &str) -> bool {
+   line.starts_with("#") || line.starts_with("//")
 }
 
 #[cfg(test)]
@@ -127,6 +133,18 @@ mod test {
           value: "world2".to_string()
        }];
        assert_eq!(result.unwrap(), expected);
+    }
+
+    #[test]
+    fn test_ignore_comments() {
+       let path = Path::new("fixtures/comments");
+       let result = load_file(&path);
+       let expected = Env {
+          name: "HELLO".to_string(),
+          value: "world".to_string()
+       };
+
+       assert_eq!(result.unwrap(), vec![expected]);
     }
 
     // Test URI
