@@ -14,20 +14,36 @@ pub struct Env {
 pub type EnvList = Vec<Env>;
 
 pub fn load_file(path: &Path) -> Result<EnvList> {
-   let file = try!(File::open(path));
+   let lines = try!(read_lines_reverse(path));
 
    let mut list: EnvList = vec![];
-   for line in BufReader::new(file).lines() {
-      let line = try!(line);
+   let mut seen: Vec<String> = vec![];
+
+   for line in lines.iter() {
       let parsed = try!(parse(line));
-      list.push(parsed);
+      if !seen.iter().by_ref().any(|e| e == &parsed.name) {
+         seen.push(parsed.name.clone());
+         list.push(parsed);
+      }
    }
+
+   list.reverse();
 
    Ok(list)
 }
 
-fn parse(data: String) -> Result<Env> {
-   let (name,value) = try!(split(&data));
+fn read_lines_reverse(path: &Path) -> Result<Vec<String>> {
+   let file = try!(File::open(path));
+   let mut lines = vec![];
+   for line in BufReader::new(file).lines() {
+      let line = try!(line);
+      lines.insert(0, line);
+   }
+   Ok(lines)
+}
+
+fn parse(data: &str) -> Result<Env> {
+   let (name,value) = try!(split(data));
    Ok(Env { name: name, value: value})
 }
 
@@ -82,7 +98,7 @@ mod test {
 
     #[test]
     fn test_multiple_eq() {
-       let path= Path::new("fixtures/multi_eq");
+       let path = Path::new("fixtures/multi_eq");
        let result = load_file(&path);
        let expected = Env {
           name: "HELLO".to_string(),
@@ -101,6 +117,18 @@ mod test {
        };
        assert_eq!(result.unwrap()[0], expected);
     }
+
+    #[test]
+    fn test_overwrite_on_double() {
+       let path = Path::new("fixtures/overwrite");
+       let result = load_file(&path);
+       let expected = vec![Env {
+          name: "HELLO".to_string(),
+          value: "world2".to_string()
+       }];
+       assert_eq!(result.unwrap(), expected);
+    }
+
     // Test URI
     // Test overwrite on double occurrence
 }
