@@ -1,18 +1,29 @@
 use std::path::Path;
 use std::fs::File;
-use std::io::{BufReader, BufRead, self};
+use std::io::{BufReader, BufRead};
 use error::BenvError;
 
 use super::Result;
 
+/// Env wraps environment variables (NAME=VALUE)
 #[derive(Debug, Eq, PartialEq)]
 pub struct Env {
     name: String,
     value: String
 
 }
+
+/// EnvList is a wrapper for a list of Env
 pub type EnvList = Vec<Env>;
 
+/// Loads an environment file and returns a Result<EnvList>
+///
+/// A file can look like this:
+///
+/// DATASASE=postgres://myserver/mydatabase
+/// # A comment
+/// // Another comment
+/// SECRET_KEY=qwerty
 pub fn load_file(path: &Path) -> Result<EnvList> {
    let lines = try!(read_lines_reverse(path));
 
