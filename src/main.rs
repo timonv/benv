@@ -1,7 +1,11 @@
 mod load;
 mod error;
+mod env;
+mod run;
 
 use std::result;
+use run::run;
+use env::Env;
 
 pub use error::BenvError;
 
@@ -10,5 +14,5 @@ pub type Result<T> = result::Result<T, BenvError>;
 
 #[cfg(not(test))]
 fn main() {
-    println!("Hello, world!");
+    run("env", vec![Env::new("HELLO", "World")]);
 }

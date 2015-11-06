@@ -4,17 +4,7 @@ use std::io::{BufReader, BufRead};
 use error::BenvError;
 
 use super::Result;
-
-/// Env wraps environment variables (NAME=VALUE)
-#[derive(Debug, Eq, PartialEq)]
-pub struct Env {
-    name: String,
-    value: String
-
-}
-
-/// EnvList is a wrapper for a list of Env
-pub type EnvList = Vec<Env>;
+use env::{Env, EnvList};
 
 /// Loads an environment file and returns a Result<EnvList>
 ///
@@ -75,6 +65,7 @@ fn is_comment(line: &str) -> bool {
 mod test {
     use super::*;
     use std::path::Path;
+    use env::Env;
 
     #[test]
     fn test_single_var() {

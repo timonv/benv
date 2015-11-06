@@ -9,7 +9,8 @@ use std::io;
 pub enum BenvError {
     ParseError,
     SplitError(&'static str),
-    IO(io::Error)
+    IO(io::Error),
+    MissingProgram
 }
 
 impl From<io::Error> for BenvError {
