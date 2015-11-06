@@ -8,11 +8,11 @@ mod env;
 mod run;
 
 use run::run;
-use env::Env;
 use load::load_file;
 use docopt::Docopt;
 use std::result;
 use std::path::Path;
+use std::process::exit;
 
 pub use error::BenvError;
 
@@ -44,6 +44,16 @@ fn main() {
     let args: Args = Docopt::new(USAGE)
         .and_then(|d| d.decode())
         .unwrap_or_else(|e| e.exit());
+
+    if args.arg_dotenv == "" {
+      println!("Missing env file");
+      exit(1);
+    }
+
+    if args.arg_program == "" {
+      println!("Missing program");
+      exit(1);
+    }
 
     let envlist = load_file(&Path::new(&args.arg_dotenv)).unwrap();
     run(&args.arg_program, envlist).unwrap().wait().unwrap();

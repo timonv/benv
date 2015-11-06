@@ -47,7 +47,7 @@ fn read_lines_reverse(path: &Path) -> Result<Vec<String>> {
 }
 
 fn parse((name, value): (String, String)) -> Result<Env> {
-   Ok(Env { name: name, value: value})
+   Ok(Env::new(&name, &value))
 }
 
 fn split(data: &str) -> Result<(String, String)> {

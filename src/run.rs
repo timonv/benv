@@ -1,5 +1,5 @@
 use std::process::{Command, Child};
-use env::{Env, EnvList};
+use env::EnvList;
 use super::Result;
 use error::BenvError;
 
