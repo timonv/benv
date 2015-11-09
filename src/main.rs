@@ -47,14 +47,26 @@ fn main() {
 
     if args.arg_dotenv == "" {
       println!("Missing env file");
+      println!("{}", USAGE);
       exit(1);
     }
 
     if args.arg_program == "" {
       println!("Missing program");
+      println!("{}", USAGE);
       exit(1);
     }
 
-    let envlist = load_file(&Path::new(&args.arg_dotenv)).unwrap();
-    run(&args.arg_program, envlist).unwrap().wait().unwrap();
+    load_file(&Path::new(&args.arg_dotenv))
+      .and_then(|env_list| run(&args.arg_program, env_list))
+      .and_then(|mut process| process.wait().map_err(BenvError::IO))
+      .map_err(print_user_friendly_error_and_exit).unwrap();
 }
+
+#[cfg(not(test))]
+fn print_user_friendly_error_and_exit(error: BenvError) {
+  println!("{}", error);
+  println!("{}", USAGE);
+  exit(1);
+}
+

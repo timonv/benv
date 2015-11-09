@@ -1,4 +1,5 @@
 use std::io;
+use std::fmt;
 
 /// Generic error used accross the libary.
 /// Wraps around other errors for genericity.
@@ -7,7 +8,6 @@ use std::io;
 /// and the rest should work like magic.
 #[derive(Debug)]
 pub enum BenvError {
-    ParseError,
     SplitError(&'static str),
     IO(io::Error),
     MissingProgram
@@ -19,14 +19,12 @@ impl From<io::Error> for BenvError {
     }
 }
 
-// impl error::Error for BenvError {
-//     fn description(&self) -> &str {
-//         match *self {
-//         }
-//     }
-
-//     fn cause(&self) -> Option<&error::Error> {
-//         match *self {
-//         }
-//     }
-// }
+impl fmt::Display for BenvError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            BenvError::IO(ref err) => write!(f, "IO error: {}", err),
+            BenvError::SplitError(ref err) => write!(f, "Split error: {}", err),
+            BenvError::MissingProgram => write!(f, "Missing program")
+        }
+    }
+}
