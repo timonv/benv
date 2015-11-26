@@ -1,6 +1,6 @@
 [package]
 name = "benv"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Timon Vonk <timonv@gmail.com>"]
 description = "Load env files for an application without the dependency"
 homepage = "https://github.com/timonv/benv"
