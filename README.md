@@ -9,7 +9,7 @@ However:
 * Might be in the way when the rest of the application doesn't have to be loaded
 * Not very unixy
 
-In a shell, I often solve this by doing `env $(cat /where/my/application/is/.env | sed '/^#/d' | xargs)`. But lets be fair, no one remembers that!
+In a shell, I often solve this by doing `env $(cat /where/my/application/is/.env | sed '/^#/d' | xargs)`. But lets be fair, no one ~~remembers that~~ wants to type that much!
 
 Meet B(etter)env. `benv` simply loads a `.env` file into the environment and starts an application.
 
@@ -33,7 +33,16 @@ $ cp target/release/benv /somewhere/in/your/path
 ## Usage
 
 ```
-$ benv <dotenv> <program>
+$ benv <dotenv> <program>...
+
+$ benv my/file echo $MYVARIABLE
+$ benv .env bundle exec rails
+$ benv .env cargo run
+$ benv .env npm start
+$ benv .env mix phoenix.server
+$ benv .env my_binary
+
+And so on!
 ```
 
 See `benv --help` for more options.
