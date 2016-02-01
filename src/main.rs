@@ -1,20 +1,21 @@
+#![cfg_attr(test, allow(dead_code))]
+#![cfg_attr(test, allow(unused_imports))]
+
 extern crate rustc_serialize;
 extern crate docopt;
 
-
-mod load;
-mod error;
 mod env;
+mod error;
+mod load;
 mod run;
 
-use run::run;
-use load::load_file;
 use docopt::Docopt;
-use std::result;
+use error::BenvError;
+use load::load_file;
+use run::run;
 use std::path::Path;
 use std::process::exit;
-
-pub use error::BenvError;
+use std::result;
 
 /// Generic Result type. Never return internal results.
 pub type Result<T> = result::Result<T, BenvError>;

@@ -28,24 +28,24 @@ fn split_program_and_args(program_with_args: &str) -> Result<(String, Vec<&str>)
     Ok((program, vec))
 }
 
-#[cfg(test)]
-mod test {
-    use super::*;
-    use env::{Env, EnvList};
+// #[cfg(test)]
+// mod test {
+//     use super::*;
+//     use env::{Env, EnvList};
 
-    #[test]
-    fn test_simple_command() {
-        // TODO
-        //
-        // With latest nightly, it seems impossible to write a proper test case
-        // where stdout of the child process is captured.
-        //
-        // let envlist: EnvList = vec![Env::new("HELLO", "World")];
-        // let child = run("echo $HELLO", envlist).unwrap().wait_with_output().unwrap();
-        // println!("{:?}", child.stderr);
-        // let result = String::from_utf8(child.stdout).unwrap();
+//     #[test]
+//     fn test_simple_command() {
+//         // TODO
+//         //
+//         // With latest nightly, it seems impossible to write a proper test case
+//         // where stdout of the child process is captured.
+//         //
+//         // let envlist: EnvList = vec![Env::new("HELLO", "World")];
+//         // let child = run("echo $HELLO", envlist).unwrap().wait_with_output().unwrap();
+//         // println!("{:?}", child.stderr);
+//         // let result = String::from_utf8(child.stdout).unwrap();
 
 
-        // assert_eq!(result, "world");
-    }
-}
+//         // assert_eq!(result, "world");
+//     }
+// }
